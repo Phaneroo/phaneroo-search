@@ -2,7 +2,7 @@ import graphene
 import chromadb
 
 # Create a client object
-client = chromadb.PersistentClient(path="db")
+client = chromadb.PersistentClient(path="phaneroo_search/db")
 
 # Create collection objects
 sermons_collection = client.get_collection("sermons")
