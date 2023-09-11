@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "phaneroo_search/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "phaneroo_search/wsgi.py"
+    }
+  ]
+}

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-63jr3e0&d=7ml87dwgh8tr114w56+sc)w0no$3)+pm%&_la=jq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
 
 # Application definition
@@ -69,6 +69,7 @@ TEMPLATES = [
     },
 ]
 
+# added vercel
 WSGI_APPLICATION = 'phaneroo_search.wsgi.application'
 
 
