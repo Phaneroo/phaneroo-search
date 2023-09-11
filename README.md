@@ -65,4 +65,4 @@ query {
 query {
   searchDevetionals(searchText: 'Knowing God')
 }
-```"# phaneroo-search" 
+```"
