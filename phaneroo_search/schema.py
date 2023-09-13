@@ -1,3 +1,4 @@
+import json
 import graphene
 import chromadb
 
@@ -18,10 +19,10 @@ class Query(graphene.ObjectType):
 
 
     def resolve_get_sermon(self, info, sermon_id):
-        return sermons_collection.get(ids=[sermon_id], limit=1, include=["metadatas"])
+        return json.dumps(sermons_collection.get(ids=[sermon_id], limit=1, include=["metadatas"]).__getitem__('metadatas'))
     
     def resolve_get_sermons(self, info):
-        return sermons_collection.get(include=["metadatas"])
+        return json.dumps(sermons_collection.get(include=["metadatas"]).__getitem__('metadatas'))
     
     def resolve_search_sermons(self, info, search_text):
         # Query the collection for the most similar document to a given query
@@ -29,12 +30,12 @@ class Query(graphene.ObjectType):
             query_texts=[search_text],
             include=["metadatas"]
         )
-        return result
-    def resolve_get_devotional(self, info, sermon_id):
-        return devotionals_collection.get(ids=[sermon_id], limit=1, include=["metadatas"])
+        return json.dumps(result.__getitem__('metadatas'))
+    def resolve_get_devotional(self, info, devotional_id):
+        return json.dumps(devotionals_collection.get(ids=[devotional_id], limit=1, include=["metadatas"]).__getitem__('metadatas'))
     
     def resolve_get_devotionals(self, info):
-        return devotionals_collection.get(include=["metadatas"])
+        return json.dumps(devotionals_collection.get(include=["metadatas"]).__getitem__('metadatas'))
     
     def resolve_search_devotionals(self, info, search_text):
         # Query the collection for the most similar document to a given query
@@ -42,6 +43,7 @@ class Query(graphene.ObjectType):
             query_texts=[search_text],
             include=["metadatas"]
         )
-        return result
+
+        return json.dumps(result.__getitem__('metadatas'))
 
 schema = graphene.Schema(query=Query)
