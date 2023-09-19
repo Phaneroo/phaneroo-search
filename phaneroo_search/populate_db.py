@@ -43,34 +43,24 @@ def populate_devotionals(url):
     # Log a message with JSON data size
     logger.info(f'Devotionals data size: {len(devotionals)}')
     # Create a list of documents from the JSON data
+    db = chromadb.PersistentClient(
+        path="db",  # Specify a directory to save the database on disk
+        )
+    devotionals_collection = db.get_or_create_collection("devotionals")
 
-    documents = []
-    metadatas = []
-    ids = []
-
+    logger.info(f'Adding data to db and creating embeddings...')
     for doc in devotionals:
-        documents.append(f"{doc['title']}")
-        metadatas.append({  # Use any other fields as metadata
+        document = f"{doc['title']}"
+        metadata = {  # Use any other fields as metadata
                 "id": str(doc["id"]),
                 "title": str(doc["title"]),
                 "body": str(doc["body"]),
                 "artlink": str(doc["artlink"]),
                 "date": str(doc["date"])
-            })
-        ids.append(str(doc["id"]))
+            }
+        id = str(doc["id"])
+        devotionals_collection.add(documents=document, metadatas=metadata, ids=id)
 
-    # Log an info message with documents size
-    logger.info(f'Documents size: {len(documents)}')
-    logger.info(f'Metadatas size: {len(metadatas)}')
-    logger.info(f'IDs size: {len(ids)}')
-    # Create a chroma db object using Chroma constructor without passing embeddings parameter
-    logger.info(f'Adding data to db and creating embeddings...')
-    db = chromadb.PersistentClient(
-        path="db",  # Specify a directory to save the database on disk
-        )
-    devotionals_collection = db.get_or_create_collection("devotionals")
-    # Add documents to chroma db using add_documents method
-    devotionals_collection.add(documents=documents, metadatas=metadatas, ids=ids)
     # Return the chroma db object
     return db
     
@@ -95,9 +85,16 @@ def populate_sermons(url):
         metadatas = []
         ids = []
 
+        db = chromadb.PersistentClient(
+            path="db",  # Specify a directory to save the database on disk
+            )
+        
+        sermons_collection = db.get_or_create_collection("sermons")
+
+        logger.info(f'Adding data to db and creating embeddings...')
         for doc in json_data["data"]:
-            documents.append(f"{doc['title']} {doc['description']}")
-            metadatas.append({  # Use any other fields as metadata
+            document = f"{doc['title']} {doc['description']}"
+            metadata = {  # Use any other fields as metadata
                     "id": str(doc["id"]),
                     "title": str(doc["title"]),
                     "description": str(doc["description"]),
@@ -105,22 +102,10 @@ def populate_sermons(url):
                     "media_link": str(doc["media_link"]),
                     "artlink": str(doc["artlink"]),
                     "published_date": str(doc["published_date"])
-                })
-            ids.append(str(doc["id"]))
+                }
+            id = str(doc["id"])
+            sermons_collection.add(documents=document, metadatas=metadata, ids=id)
 
-        # Log an info message with documents size
-        logger.info(f'Documents size: {len(documents)}')
-        logger.info(f'Metadatas size: {len(metadatas)}')
-        logger.info(f'IDs size: {len(ids)}')
-        # Create a chroma db object using Chroma constructor without passing embeddings parameter
-        logger.info(f'Adding data to db and creating embeddings...')
-        db = chromadb.PersistentClient(
-            path="db",  # Specify a directory to save the database on disk
-            )
-        sermons_collection = db.get_or_create_collection("sermons")
-        # Add documents to chroma db using add_documents method
-        sermons_collection.add(documents=documents, metadatas=metadatas, ids=ids)
-        # Return the chroma db object
         return db
     else:
         # Log an error message with failed request and status code
