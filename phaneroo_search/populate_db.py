@@ -81,10 +81,6 @@ def populate_sermons(url):
         logger.info(f'JSON data size: {len(json_data["data"])}')
         # Create a list of documents from the JSON data
 
-        documents = []
-        metadatas = []
-        ids = []
-
         db = chromadb.PersistentClient(
             path="db",  # Specify a directory to save the database on disk
             )
